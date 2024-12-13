@@ -11,5 +11,5 @@ __pycache__/
 venv/
 
 # Exclude lock and meta files
-*.lock
-meta.json
+# *.lock
+# meta.json
