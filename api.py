@@ -52,7 +52,7 @@ async def startup_event():
     )
 
     try:
-        qdrant_client = QdrantClient(path="/app/qdrant/meta.json")
+        qdrant_client = QdrantClient(path="qdrant/")
         qdrant = QdrantVectorStore(qdrant_client, "MyCollection", embed_model, distance="Dot")
     except Exception as e:
         print(f"❌ Error initializing Qdrant: {e}")
