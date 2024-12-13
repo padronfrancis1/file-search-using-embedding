@@ -13,6 +13,16 @@ from qdrant_client.models import Distance, VectorParams
 import docx
 import os
 
+# Set a writable directory for Hugging Face cache and environment variables
+hf_cache_dir = "/tmp/huggingface_cache"
+transformers_cache_dir = os.path.join(hf_cache_dir, "transformers")
+os.environ["HF_HOME"] = hf_cache_dir
+os.environ["TRANSFORMERS_CACHE"] = transformers_cache_dir
+
+# Ensure the writable directories exist
+os.makedirs(hf_cache_dir, exist_ok=True)
+os.makedirs(transformers_cache_dir, exist_ok=True)
+
 def get_files(dir):
     file_list = []
     for dir, _, filenames in os.walk(dir):
@@ -48,7 +58,7 @@ def main_indexing(mypath):
         model_name=model_name,
         model_kwargs=model_kwargs,
         encode_kwargs=encode_kwargs,
-        cache_folder="./models"
+         cache_folder=hf_cache_dir,
     )
     client = QdrantClient(path="qdrant/")
     collection_name = "MyCollection"

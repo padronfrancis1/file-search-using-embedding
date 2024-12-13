@@ -1,3 +1,12 @@
+import os
+
+# Set a writable directory for Hugging Face cache and environment variables
+hf_cache_dir = "/tmp/huggingface_cache"
+os.environ["HF_HOME"] = hf_cache_dir
+os.environ["TRANSFORMERS_CACHE"] = os.path.join(hf_cache_dir, "transformers")
+os.makedirs(hf_cache_dir, exist_ok=True)
+os.makedirs(os.environ["TRANSFORMERS_CACHE"], exist_ok=True)
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -5,7 +14,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, BitsAndB
 from langchain_community.llms import HuggingFacePipeline
 from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
-import os
 from pydantic import BaseModel
 from langchain.chains import RetrievalQA
 from langchain.schema import Document
@@ -25,11 +33,7 @@ class Item(BaseModel):
     query: str
 
 app = FastAPI()
-
-app.mount("/TestFolder", StaticFiles(directory="./TestFolder"), name="TestFolder")
-os.makedirs("./cache", exist_ok=True)
-os.makedirs("./offload", exist_ok=True)
-os.makedirs("./models", exist_ok=True)
+# app.mount("/TestFolder", StaticFiles(directory="./TestFolder"), name="TestFolder")
 
 @app.on_event("startup")
 async def startup_event():
@@ -41,10 +45,10 @@ async def startup_event():
     start_time = time.perf_counter()
     
     embed_model = HuggingFaceEmbeddings(
-    model_name=sentence_embedding_model_path,
-    cache_folder="./models",
-    model_kwargs={"device": "cpu"},
-    encode_kwargs={"normalize_embeddings": True},
+        model_name=sentence_embedding_model_path,
+        model_kwargs={"device": "cpu"},
+        encode_kwargs={"normalize_embeddings": True},
+        cache_folder=hf_cache_dir,
     )
 
     try:
@@ -54,8 +58,8 @@ async def startup_event():
         print(f"❌ Error initializing Qdrant: {e}")
 
     model_path = "distilbert-base-cased-distilled-squad"
-    model = AutoModelForQuestionAnswering.from_pretrained(model_path, cache_dir="./models")
-    tokenizer = AutoTokenizer.from_pretrained(model_path, cache_dir="./models")
+    model = AutoModelForQuestionAnswering.from_pretrained(model_path, cache_dir=hf_cache_dir)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, cache_dir=hf_cache_dir)
     qa_pipeline = pipeline(
         "question-answering",
         model=model,
