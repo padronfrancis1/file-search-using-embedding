@@ -101,8 +101,8 @@ def search(Item:Item):
 async def ask_localai(item: Item):
     query = item.query
     
-    search_result = qdrant.similarity_search(query=query, k=3)
-    return {"item": item, "search_result": search_result}
+    # search_result = qdrant.similarity_search(query=query, k=3)
+    return {"item": item, "search_result": query}
     # if not search_result:
     #     return {"error": "No relevant results found for the query."}
 
