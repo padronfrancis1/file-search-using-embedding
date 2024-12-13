@@ -102,29 +102,30 @@ async def ask_localai(item: Item):
     query = item.query
     
     search_result = qdrant.similarity_search(query=query, k=3)
-    if not search_result:
-        return {"error": "No relevant results found for the query."}
+    return {"item": item, "search_result": search_result}
+    # if not search_result:
+    #     return {"error": "No relevant results found for the query."}
 
-    context = " ".join([res.page_content for res in search_result])
-    if not context.strip():
-        return {"error": "No relevant context found."}
+    # context = " ".join([res.page_content for res in search_result])
+    # if not context.strip():
+    #     return {"error": "No relevant context found."}
 
-    try:
-        prompt = (
-            f"Context: {context}\n\n"
-            f"Question: {query}\n"
-            f"Answer concisely and only based on the context provided. Do not repeat the context or the question.\n"
-            f"Answer:"
-        )
-        qa_result = qa_pipeline(question=query, context=context)
-        answer = qa_result["answer"]
+    # try:
+    #     prompt = (
+    #         f"Context: {context}\n\n"
+    #         f"Question: {query}\n"
+    #         f"Answer concisely and only based on the context provided. Do not repeat the context or the question.\n"
+    #         f"Answer:"
+    #     )
+    #     qa_result = qa_pipeline(question=query, context=context)
+    #     answer = qa_result["answer"]
 
-        return {
-            "question": query,
-            "answer": answer
-        }
-    except Exception as e:
-        return {"error": "Failed to generate an answer."}
+    #     return {
+    #         "question": query,
+    #         "answer": answer
+    #     }
+    # except Exception as e:
+    #     return {"error": "Failed to generate an answer."}
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: str = None):
