@@ -1,0 +1,23 @@
+# torch
+transformers
+langchain
+langgraph
+qdrant-client
+PyPDF2
+tiktoken
+langchain-text-splitters
+sentence_transformers
+langchain-qdrant
+fastapi
+gradio_client
+pydantic
+uvicorn
+accelerate
+streamlit
+python-docx
+python-pptx
+openai
+requests
+nltk
+langchain-huggingface
+langchain-community

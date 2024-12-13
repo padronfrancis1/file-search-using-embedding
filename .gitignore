@@ -1,0 +1,15 @@
+# Exclude sensitive files
+environment_var.py
+# storage.sqlite
+cache/
+# qdrant/*
+# !qdrant/.gitkeep
+# Exclude compiled Python files
+__pycache__/
+
+# Exclude virtual environment
+venv/
+
+# Exclude lock and meta files
+*.lock
+meta.json
