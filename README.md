@@ -1,1 +1,1 @@
-# file-search-using-embedding
+# File search using word embeddings (similarity_search)
