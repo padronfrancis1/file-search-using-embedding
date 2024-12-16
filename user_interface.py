@@ -143,9 +143,5 @@ with right_col:
     if st.session_state.ai_result:
         st.write(st.session_state.ai_result)
 
-    st.markdown(
-        f"<span style='font-size:16px;'>This AI model is trained from the following document: <a href='{pdf_url}' target='_blank' style='color: blue;'>View PDF</a></span>",
-        unsafe_allow_html=True,
-    )
 
 st.markdown('</div>', unsafe_allow_html=True)
