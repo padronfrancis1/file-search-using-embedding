@@ -31,6 +31,9 @@ class Item(BaseModel):
 
 app = FastAPI()
 
+# Mount static files from TestFolder
+app.mount("/files", StaticFiles(directory="TestFolder"), name="files")
+
 @app.on_event("startup")
 async def startup_event():
     global model, tokenizer, qa_pipeline, embed_model, qdrant
