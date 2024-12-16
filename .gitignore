@@ -6,10 +6,10 @@ cache/
 # !qdrant/.gitkeep
 # Exclude compiled Python files
 __pycache__/
-
 # Exclude virtual environment
 venv/
-
+tmp/
+Dockerfile
 # Exclude lock and meta files
 # *.lock
 # meta.json

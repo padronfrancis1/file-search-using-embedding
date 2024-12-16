@@ -8,8 +8,7 @@ from nltk.corpus import stopwords
 nltk.download('stopwords', quiet=True)
 STOPWORDS = set(stopwords.words("english"))
 
-pdf_url = "http://127.0.0.1:8000/TestFolder/2201.01647v4.pdf"
-
+base_url = "http://127.0.0.1:8000/"
 st.set_page_config(layout="wide")
 st.markdown(
     """
@@ -29,7 +28,7 @@ st.markdown(
 )
 
 st.markdown('<div class="content-container">', unsafe_allow_html=True)
-st.title('_:blue[Local File Search]_ :sunglasses:')
+st.title('_:blue[Local File Search]_ :📂')
 
 if "search_result" not in st.session_state:
     st.session_state.search_result = []
@@ -105,47 +104,27 @@ with left_col:
             
             valid_snippets = [snippet for snippet in snippets if snippet != "No matches found."]
             if valid_snippets:
-                st.markdown(f"<span style='font-size:20px; font-weight:bold;'>Document: <a href='{pdf_url}' target='_blank' style='text-decoration: none; color: blue;'>{item.get('path', 'Unknown File')}</a></span>",
+                item_path = item.get('path', 'Unknown File').replace('TestFolder', 'files')
+                st.markdown(f"<span style='font-size:20px; font-weight:bold;'>Document: <a href='{base_url}{item_path}' target='_blank' style='text-decoration: none; color: blue;'>{item_path}</a></span>",
                             unsafe_allow_html=True)
                 for snippet in valid_snippets:
                     st.markdown(f"- {snippet}", unsafe_allow_html=True)
 
+
 with right_col:
-    st.subheader("Ask LocalAI")
-    ai_input = st.text_input("Enter your question for LocalAI:", st.session_state.ai_input, key="ai_input_key")
-    if st.button("Ask LocalAI"):
-        st.session_state.ai_input = ai_input
-        url = "http://127.0.0.1:8000/ask_localai"
+    st.subheader("📂 File Links Preview")
+    st.write("Click on a file link to preview:")
+    
+    file_links = [
+        {"name": "2201.01647v4.pdf", "url": f"{base_url}files/2201.01647v4.pdf"},
+        {"name": "SeraphimdroidEmail.txt", "url": f"{base_url}files/subfolder/SeraphimdroidEmail.txt"},
+    ]
 
-        payload = json.dumps({"query": ai_input})
-        headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-
-        try:
-            response = requests.post(url, headers=headers, data=payload)
-            response.raise_for_status()
-            response_data = response.json()
-
-            if "answer" in response_data:
-                query = response_data.get("question", "No question provided.")
-                answer = response_data.get("answer", "No answer provided.")
-                st.session_state.ai_result = f"### Question:\n{query}\n\n### Answer:\n{answer}"
-            else:
-                st.session_state.ai_result = "No 'answer' field found in the response."
-
-        except requests.exceptions.RequestException as e:
-            st.session_state.ai_result = f"HTTP Request failed: {e}"
-        except json.JSONDecodeError:
-            st.session_state.ai_result = "Failed to decode JSON response.."
-
-    if st.session_state.ai_result:
-        st.write(st.session_state.ai_result)
-
-    st.markdown(
-        f"<span style='font-size:16px;'>This AI model is trained from the following document: <a href='{pdf_url}' target='_blank' style='color: blue;'>View PDF</a></span>",
-        unsafe_allow_html=True,
-    )
+    for file in file_links:
+        st.markdown(
+            f"<a href='{file['url']}' target='_blank' style='font-size:16px; color: blue; text-decoration: none;'>"
+            f"📄 {file['name']}</a>",
+            unsafe_allow_html=True,
+        )
 
 st.markdown('</div>', unsafe_allow_html=True)
