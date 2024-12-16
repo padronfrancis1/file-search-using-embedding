@@ -9,6 +9,7 @@ __pycache__/
 # Exclude virtual environment
 venv/
 tmp/
+
 Dockerfile
 # Exclude lock and meta files
 # *.lock
